@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-from showbox.webcast.models import *
+from webcast.models import *
 from datetime import timedelta
 
 def index(req):
@@ -15,7 +15,7 @@ def channel(req, channel_id):
     return render_to_response('index.html', locals())
 
 def refresh(req):
-    feeds = update_cast()
+#    feeds = update_cast()
     return render_to_response('update_cast.html', locals())
 
 def updater(req):
