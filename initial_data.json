@@ -1,0 +1,55 @@
+[
+    {
+        "pk": 3, 
+        "model": "webcast.channel", 
+        "fields": {
+            "name": "\ub274\uc2a4"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "webcast.channel", 
+        "fields": {
+            "name": "\ub9cc\ud654"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "webcast.channel", 
+        "fields": {
+            "name": "\uc2a4\ud3ec\uce20/\uc5f0\uc608"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "webcast.channel", 
+        "fields": {
+            "name": "\uc815\ubcf4\ud1b5\uc2e0"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "webcast.channel", 
+        "fields": {
+            "name": "\ud56b \uc774\uc288"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "webcast.feed", 
+        "fields": {
+            "url": "http://bloggernews.media.daum.net/best/rss", 
+            "channel": 1, 
+            "title": ""
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "webcast.feed", 
+        "fields": {
+            "url": "http://media.daum.net/rss/today/hotissue/rss2.xml", 
+            "channel": 1, 
+            "title": ""
+        }
+    }
+]

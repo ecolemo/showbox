@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>멍 캐스트 - 가만히 앉아서 보는 인터넷</title>
+<link rel="stylesheet" type="text/css" href="/common/style.css" />
+
+<script type="text/javascript" src="/common/prototype.js"></script>
+<script type="text/javascript" src="/common/effects.js"></script>
+<script type="text/javascript">
+var entryIndex = 0;
+var period = 20;
+var timeElapsed = 0;
+var interval = 1;
+var pe;
+
+function showEntry(index) {
+	var link = $('entries').down('li a', index)
+	$('showbox').down('iframe').src = link.href
+	$('currentCast').href = link.href
+	$('currentCast').innerHTML = link.innerHTML
+
+	$$('#entries li').each(function(elem) { elem.removeClassName('current'); })
+	$('entries').down('li', index).addClassName('current')
+	$('entries').down('li', index).scrollIntoView();
+
+	$('alarm').hide()
+}
+
+function play() {
+	if (pe) return;
+
+	timeElapsed = 0;
+	
+	pe = new PeriodicalExecuter(function(pe) {
+		timeElapsed += interval;
+//		$('timeElapsed').style.width = timeElapsed / period * 100 + '%';
+		$('alarm').down('span').innerHTML = period - timeElapsed
+		if (timeElapsed >= period - 5 && !$('alarm').visible()) {
+			showAlarm()
+		} else if (timeElapsed < period + interval && timeElapsed > period - interval) {
+			timeElapsed = 0;
+			showEntry(++entryIndex);
+		}  
+	}, interval);
+	$('autoPlayButton').firstChild.src='/images/running.gif'
+}
+
+function pause() {
+	if (pe)	pe.stop();
+	pe = null;
+	$('autoPlayButton').firstChild.src='/images/stopped.gif'
+	$('alarm').hide();
+}
+
+function togglePlay() {
+	if (pe) {
+		pause();
+	} else {
+		play();
+	}
+}
+
+function showAlarm() {
+	$('alarm').appear({to: 0.8});
+//	$('alarm').style.top = $('showFrame').cumulativeOffset().top + 'px';
+	$('alarm').style.left = $('showFrame').cumulativeOffset().left + ($('showFrame').getWidth() - $('alarm').getWidth()) / 2 + 'px' ;
+	$('alarm').style.top = $('showFrame').cumulativeOffset().top + ($('showFrame').getHeight() - $('alarm').getHeight()) / 2 + 'px';
+//	$('alarm').style.left = (document.viewport.getWidth() - $('alarm').getWidth()) / 2 + 'px' ;
+}
+
+window.onload = function() {
+	$('period').innerHTML = period
+	$('entries').observe('click', function(evt) {
+		evt.stop();
+		var link;
+		if (evt.element().nodeName.toLowerCase() == 'a') link = evt.element()
+		else if (evt.element().nodeName.toLowerCase() == 'li') link = evt.element().firstChild
+		else return;
+		
+		entryIndex = $$('#entries li').collect(function(elem, index) {
+			return [elem, index]
+		}).find(function(elem) {
+			return elem[0] == link.parentNode
+		})[1]
+		timeElapsed = 0
+		showEntry(entryIndex)
+	})
+
+	showEntry(0);
+//	play();
+//	resize();
+}
+
+function resize() {
+//	var frame = $('showFrame')
+	
+//	var height = document.viewport.getHeight() - frame.cumulativeOffset().top - 30
+//	frame.style.height = height + 'px'
+
+//	var width = document.viewport.getWidth() - $('sidebar').getWidth() -30
+//	frame.style.width = width + 'px'
+//	$('controlPanel').style.width = width + 'px'
+
+//	$('timeBar').style.width = width - 220 + 'px'
+//	$('showFrame').style.height = $('showFrame').parentNode.getHeight() + 'px'
+}
+function addPeriod(n) {
+	period += n
+	$('period').innerHTML = period
+}
+
+//window.onresize = resize 
+
+</script>
+</head>
+
+<body>
+<table id="layout">
+	<tbody>
+		<tr class="controls" >
+			<td style="width: 20px;">&nbsp;</td>
+			<td style="width: 60px;"><button onclick="showEntry(--entryIndex)">&lt;이전</button></td>
+			<td class="entryTitle" style="width: 400px; text-align: center"><a id="currentCast" href=""></a></td>
+			<td style="width: 60px;"><button onclick="showEntry(++entryIndex); play();">다음&gt;</button></td>
+			</td>
+			<td style="text-align: right;">
+				<span>자동보기</span>
+				<span id="period"></span>초
+				<button onclick="addPeriod(1)">+</button>
+				<button onclick="addPeriod(-1)">-</button>
+			</td>
+			<td style="width: 30px; text-align: right">
+				<button id="autoPlayButton" class="image" onclick="togglePlay(this)"><img src="/images/stopped.gif" style="width: 24px; height: 24px; position: relative; "/></button>
+			</td>
+			<td id="navigation">
+				<a href="http://issue.mungcast.com">고객센터</a>
+				&nbsp;
+			</td>			
+
+		</tr>
+		<tr>
+			<td colspan="6" id="showbox">
+				<iframe id="showFrame" frameborder="0"></iframe>
+			</td>
+			<td id="sidebar" >
+				<h2>채널</h2>
+				<ul id="channel">
+					<li {%if not channel_id%}class="current"{%endif%}><a href="/"">종합</a></li>
+					{% for channel in channels %}
+					<li {%ifequal channel_id channel.id %}class="current"{%endifequal%}><a href="/channel/{{channel.id}}">{{channel.name}}</a></li>
+					{% endfor %}
+				</ul>
+				
+				<h2>기사</h2>
+				<ul id="entries">
+					{% for entry in entries %}
+					<li><a href="{{entry.link}}">{{entry.title}}</a></li>
+					{% endfor %}
+				</ul>
+				<div>
+					<a href="http://ecolemo.com"><img src="http://ecolemo.com/logo.png" style="border: none; width: 110px; height: 51px"/></a>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<div id="alarm" style="display: none;" onclick="pause(); $('alarm').hide(); $('autoPlayButton').pulsate()">
+	<h5>자동 넘김</h5>
+	<span></span>
+	<br/>
+	<button class="image">멈춤</button>
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-944094-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

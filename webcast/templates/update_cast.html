@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>심심풀이 땅콩</title>
+
+<script type="text/javascript" src="/common/prototype.js"></script>
+
+<body>
+<ul id="urlList">
+{% for feed in feeds %}
+	<li>{{feed.url}}</li>
+	<ul>
+		{% for entry in feed.entry_set.all %}
+			<li>{{entry.link}} {{entry.updated_at}}</li>
+		{% endfor %}
+	</ul>
+{% endfor %}
+</ul>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>심심풀이 땅콩</title>
+
+<script type="text/javascript" src="/common/prototype.js"></script>
+
+<body>
+<h1>웹캐스트 업데이트 현황판</h1>
+<h2>자동 업데이트</h2>
+<div>
+	<span>{{updater.running|yesno:"실행 중,중지됨"}}</span>
+	<button onclick="location='/admin/start_updater'">실행</button>
+	<button onclick="location='/admin/stop_updater'">중지</button>
+	<br/>
+	<span>마지막 업데이트 : {{updater.last_update_time}} {{updater.count}}건</span>
+	<br/>
+	<span>다음 업데이트 : {{updater.next_update_time}}</span>
+	<button onclick="location='/admin/update_now'">지금 업데이트</button>
+</div>
+<h2>최근 업데이트 목록</h2>
+<table>
+	<thead>
+		<tr>
+			<th>기사</th>
+			<th>피드</th>
+			<th>업데이트</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for entry in updater.recent_entries %}
+		<tr>
+			<td><a href="{{entry.link}}">{{entry.title}}</a></td>
+			<td><a href="{{entry.feed.link}}">{{entry.feed.title}}</a></td>
+			<td>{{entry.updated_at}}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+</body>
+</html>
