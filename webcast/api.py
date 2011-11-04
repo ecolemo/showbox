@@ -10,7 +10,11 @@ class HttpResponseJSON(HttpResponse):
         HttpResponse.__init__(self, simplejson.dumps(data, ensure_ascii=False), content_type='application/json')
         
 def entries(req):
-    entries = Entry.objects.filter(updated_at__gt=datetime.today() - timedelta(days=2)).order_by('-updated_at')
+    if 'channel' in req.REQUEST:
+        entries = Entry.objects.filter(updated_at__gt=datetime.today() - timedelta(days=2)).filter(channel__id=req.REQUEST['channel']).order_by('-updated_at')
+    else:
+        entries = Entry.objects.filter(updated_at__gt=datetime.today() - timedelta(days=2)).order_by('-updated_at')
+        
     data = {'entries': [model_to_dict(entry, fields=['id', 'feed', 'link', 'title']) for entry in entries]}
     return HttpResponseJSON(data)
 
