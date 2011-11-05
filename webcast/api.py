@@ -11,7 +11,7 @@ class HttpResponseJSON(HttpResponse):
         
 def entries(req):
     if 'channel' in req.REQUEST:
-        entries = Entry.objects.filter(updated_at__gt=datetime.today() - timedelta(days=2)).filter(channel__id=req.REQUEST['channel']).order_by('-updated_at')
+        entries = Entry.objects.filter(updated_at__gt=datetime.today() - timedelta(days=2)).filter(feed__channel__id=req.REQUEST['channel']).order_by('-updated_at')
     else:
         entries = Entry.objects.filter(updated_at__gt=datetime.today() - timedelta(days=2)).order_by('-updated_at')
         
