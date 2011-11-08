@@ -2,7 +2,7 @@ from django.db import models
 import feedparser
 import time
 from datetime import datetime, timedelta
-from showbox.webcast.scheduler import Scheduler
+from webcast.scheduler import Scheduler
 from django.db import IntegrityError
 from django.conf import settings
 from django.db import transaction
